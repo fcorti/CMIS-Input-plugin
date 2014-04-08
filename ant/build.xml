@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="CMIS Input plugin for Pentaho Data Integration">
+
+	<!-- Customizations. -->
+	<property name="operating.system" value="linux/x86_64" />
+
+	<!-- Properties. -->
+	<property name="project.dir" location=".." />
+	<property name="workspace.dir" location="${project.dir}/.." />
+	<property name="src.dir" location="${project.dir}/src" />
+	<property name="bin.dir" location="${project.dir}/bin" />
+	<property name="build.dir" location="${project.dir}/build" />
+	<property name="lib.dir" location="${project.dir}/lib" />
+	<property name="libswt.dir" location="${project.dir}/libswt/${operating.system}" />
+	<property name="jar.name" value="CmisInput.jar" />
+
+	<!-- Build the project. -->
+	<target name="1. Build all">
+
+		<!-- Clean. -->
+		<delete dir="${bin.dir}" />
+		<delete file="${build.dir}/${jar.name}" />
+		<mkdir dir="${bin.dir}" />
+
+		<!-- Compile. -->
+		<javac srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false">
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${libswt.dir}">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${build.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+
+		<!-- Create jar. -->
+		<path id="build.class-path.absolute">
+			<fileset dir="${build.dir}">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${lib.dir}">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${libswt.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</path>
+		<pathconvert property="build.class-path" pathsep=" " dirsep="/">
+			<path refid="build.class-path.absolute" />
+			<map from="${build.dir}" to="." />
+			<map from="${lib.dir}" to="lib" />
+			<map from="${libswt.dir}" to="libswt/${operating.system}" />
+		</pathconvert>
+		<jar destfile="${build.dir}/${jar.name}">
+			<manifest>
+				<attribute name="Class-Path" value=". ${build.class-path}" />
+			</manifest>
+			<fileset dir="${bin.dir}" />
+		</jar>
+
+	</target>
+
+</project>

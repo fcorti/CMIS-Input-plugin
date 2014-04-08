@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="CmisInput"
+   iconfile="CmisInput.png"
+   description="Cmis Input"
+   tooltip="Cmis Input (Alfresco, Nuxeo, ecc.)"
+   category="Input"
+   classname="it.francescocorti.kettle.cmisinput.CmisInputMeta">
+   <libraries>
+    <library name="chemistry-opencmis-client-api-0.10.0.jar"/>
+    <library name="chemistry-opencmis-client-bindings-0.10.0.jar"/>
+    <library name="chemistry-opencmis-client-impl-0.10.0.jar"/>
+    <library name="chemistry-opencmis-commons-api-0.10.0.jar"/>
+    <library name="chemistry-opencmis-commons-impl-0.10.0.jar"/>
+    <library name="slf4j-api-1.6.1.jar"/>
+    <library name="slf4j-log4j12-1.6.1"/>
+    <library name="CmisInput.jar"/>
+   </libraries>
+
+   <localized_category>
+     <category locale="en_US">Input</category>
+     <category locale="it_IT">Input</category>
+   </localized_category>
+   <localized_description>
+     <description locale="en_US">Cmis Input</description>
+     <description locale="it_IT">Cmis Input</description>
+   </localized_description>
+   <localized_tooltip>
+     <tooltip locale="en_US">Cmis input plugin (for Alfresco, Nuxeo, etc.)</tooltip>
+     <tooltip locale="it_IT">Plugin di importazione Cmis (per Alfresco, Nuxeo, ecc.)</tooltip>
+   </localized_tooltip>
+   
+</plugin>
