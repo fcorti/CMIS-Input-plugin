@@ -45,48 +45,62 @@ public class CmisInput extends BaseStep implements StepInterface {
         first = false;
 
         logDebug("Cmis Input - Starting...");
-	    meta = (CmisInputMeta)smi;
-	    data = (CmisInputData)sdi;
+        meta = (CmisInputMeta)smi;
+        data = (CmisInputData)sdi;
 
-	    // Define outputRowData.
-        logDebug("Cmis Input - Define 'outputRowData'.");
+        // Define outputRowMeta.
+        logDebug("Cmis Input - Define 'outputRowMeta'.");
 	    data.outputRowMeta = new RowMeta();
 	    meta.getFields(data.outputRowMeta, getStepname(), null, null, this);
 
-        // Executing the query.
-		logDebug("Cmis Input - Executing the query.");
-	    ItemIterable<QueryResult> results = meta.getSession(getParentVariableSpace()).query(getParentVariableSpace().environmentSubstitute(meta.getCmisQuery()), false);
+	    ItemIterable<QueryResult> results = null;
+	    long skipNum = 0;
+	    do 
+	    {
+		    // Executing the query in pages.
+			logDebug("Cmis Input - Executing the query (from: " + skipNum + ").");
+		    results = meta.getSession(getParentVariableSpace()).query(getParentVariableSpace().environmentSubstitute(meta.getCmisQuery()), false).skipTo(skipNum);
+		    long pageNumItems = results.getPageNumItems();
+			logBasic("Cmis Input - Retrieved n." + results.getPageNumItems() + " results from item n." + skipNum + " on a total of n." + results.getTotalNumItems() + " results.");
 
-		logBasic("Cmis Input - Retrieving the n." + results.getTotalNumItems() + " query results.");
-	    int i = 0;
-	    for(QueryResult result : results) {
-	    	logRowlevel("Cmis Input - Result n." + i + ".");
-		    Object[] outputRow = RowDataUtil.allocateRowData(result.getProperties().size());
-		    for(int j=0; j < result.getProperties().size(); ++j) {
-		    	PropertyData<?> property = result.getProperties().get(j);
+		    long itemInPage = 0;
+		    while (itemInPage < pageNumItems)
+		    {
+		    	logRowlevel("Cmis Input - Result n." + (skipNum + 1) + " (item in page: " + (itemInPage + 1) + ").");
+		    	QueryResult result = results.iterator().next();
 
-		    	logRowlevel("Cmis Input - Property: '" + property.getQueryName() + "'='" + property.getFirstValue() + "'");
-                if (property.getClass().isInstance(new PropertyDateTimeImpl()))
-    	        	outputRow[j] = new Date(((GregorianCalendar) property.getFirstValue()).getTimeInMillis());
-                else if (property.getClass().isInstance(new PropertyIntegerImpl()))
-    	        	outputRow[j] = ((BigInteger)property.getFirstValue()).longValue();
-                else if (property.getClass().isInstance(new PropertyDecimalImpl()))
-    	        	outputRow[j] = ((BigInteger)property.getFirstValue()).doubleValue();
-                else
-                	outputRow[j] = property.getFirstValue();
+			    Object[] outputRow = RowDataUtil.allocateRowData(result.getProperties().size());
+			    for(int j=0; j < result.getProperties().size(); ++j)
+			    {
+			    	PropertyData<?> property = result.getProperties().get(j);
+
+			    	logRowlevel("Cmis Input - Property: '" + property.getQueryName() + "'='" + property.getFirstValue() + "'");
+	                if (property.getClass().isInstance(new PropertyDateTimeImpl()))
+	    	        	outputRow[j] = new Date(((GregorianCalendar) property.getFirstValue()).getTimeInMillis());
+	                else if (property.getClass().isInstance(new PropertyIntegerImpl()))
+	    	        	outputRow[j] = ((BigInteger)property.getFirstValue()).longValue();
+	                else if (property.getClass().isInstance(new PropertyDecimalImpl()))
+	    	        	outputRow[j] = ((BigInteger)property.getFirstValue()).doubleValue();
+	                else
+	                	outputRow[j] = property.getFirstValue();
+			    }
+
+		    	logRowlevel("Cmis Input - Put row n." + (skipNum + 1) + " (item in page: " + (itemInPage + 1) + ").");
+				putRow(data.outputRowMeta, outputRow);
+
+				if ((skipNum + 1) % 5000 == 0 && skipNum > 0) // Some basic logging every 5000 rows.
+			    {
+					logBasic("Cmis Input - Read " + (skipNum + 1) + " rows.");
+			    }
+
+				++itemInPage;
+				++skipNum;
 		    }
-
-		    logRowlevel("Cmis Input - PutRow n." + i + ".");
-			putRow(data.outputRowMeta, outputRow);
-
-			if (checkFeedback(getLinesRead()))
-				logBasic("Cmis Input - Linenr " + getLinesRead());  // Some basic logging every 5000 rows.
-
-			++i;
-		}
+	    } while (results.getHasMoreItems());
 
         logDebug("Cmis Input - Ending...");
 		return true;
+
 	}
 
 	public boolean init(StepMetaInterface smi, StepDataInterface sdi) {
