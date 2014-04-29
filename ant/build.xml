@@ -36,6 +36,7 @@
 				</fileset>
 			</classpath>
 		</javac>
+		<copydir src="${src.dir}" dest="${bin.dir}" includes="**/*.properties" />
 
 		<!-- Create jar. -->
 		<path id="build.class-path.absolute">

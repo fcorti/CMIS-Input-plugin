@@ -40,5 +40,4 @@ public class CmisSessionInfo {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
 }

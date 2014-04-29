@@ -55,8 +55,8 @@ public class CmisInput extends BaseStep implements StepInterface {
 
 	    ItemIterable<QueryResult> results = null;
 	    long skipNum = 0;
-	    do 
-	    {
+	    do {
+
 		    // Executing the query in pages.
 			logDebug("Cmis Input - Executing the query (from: " + skipNum + ").");
 		    results = meta.getSession(getParentVariableSpace()).query(getParentVariableSpace().environmentSubstitute(meta.getCmisQuery()), false).skipTo(skipNum);
@@ -64,14 +64,14 @@ public class CmisInput extends BaseStep implements StepInterface {
 			logBasic("Cmis Input - Retrieved n." + results.getPageNumItems() + " results from item n." + skipNum + " on a total of n." + results.getTotalNumItems() + " results.");
 
 		    long itemInPage = 0;
-		    while (itemInPage < pageNumItems)
-		    {
+		    while (itemInPage < pageNumItems) {
+
 		    	logRowlevel("Cmis Input - Result n." + (skipNum + 1) + " (item in page: " + (itemInPage + 1) + ").");
 		    	QueryResult result = results.iterator().next();
 
 			    Object[] outputRow = RowDataUtil.allocateRowData(result.getProperties().size());
-			    for(int j=0; j < result.getProperties().size(); ++j)
-			    {
+			    for(int j=0; j < result.getProperties().size(); ++j) {
+
 			    	PropertyData<?> property = result.getProperties().get(j);
 
 			    	logRowlevel("Cmis Input - Property: '" + property.getQueryName() + "'='" + property.getFirstValue() + "'");
@@ -88,8 +88,7 @@ public class CmisInput extends BaseStep implements StepInterface {
 		    	logRowlevel("Cmis Input - Put row n." + (skipNum + 1) + " (item in page: " + (itemInPage + 1) + ").");
 				putRow(data.outputRowMeta, outputRow);
 
-				if ((skipNum + 1) % 5000 == 0 && skipNum > 0) // Some basic logging every 5000 rows.
-			    {
+				if ((skipNum + 1) % 5000 == 0 && skipNum > 0) { // Some basic logging every 5000 rows.
 					logBasic("Cmis Input - Read " + (skipNum + 1) + " rows.");
 			    }
 

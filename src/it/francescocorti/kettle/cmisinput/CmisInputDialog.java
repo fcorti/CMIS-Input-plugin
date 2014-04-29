@@ -30,8 +30,8 @@ import org.pentaho.di.ui.trans.step.BaseStepDialog;
  * @version 1.2
  * @see http://fcorti.com
  */
-public class CmisInputDialog extends BaseStepDialog implements StepDialogInterface
-{
+public class CmisInputDialog extends BaseStepDialog implements StepDialogInterface {
+
 	private CmisInputMeta input;
 	private String url;
 	private String login;
@@ -43,12 +43,10 @@ public class CmisInputDialog extends BaseStepDialog implements StepDialogInterfa
 	private TextVar wPassword;
 	private Text wCmisQuery;
 
-	public CmisInputDialog(Shell parent,Object in,TransMeta transMeta,String sname)
-	{
+	public CmisInputDialog(Shell parent,Object in,TransMeta transMeta,String sname) {
 		super(parent,(BaseStepMeta) in,transMeta,sname);
 		input = (CmisInputMeta) in;
-		if (input.getUrl().isEmpty())
-		{
+		if (input.getUrl().isEmpty()) {
 			input.setDefault();
 		}
 		url = input.getUrl();
@@ -57,8 +55,8 @@ public class CmisInputDialog extends BaseStepDialog implements StepDialogInterfa
 		cmisQuery = input.getCmisQuery();
 	}
 
-	public String open()
-	{
+	public String open() {
+
 		Shell parent = getParent();
 		Display display = parent.getDisplay();
 		
@@ -66,10 +64,8 @@ public class CmisInputDialog extends BaseStepDialog implements StepDialogInterfa
 		props.setLook(shell);
         setShellImage(shell,input);
 
-		ModifyListener lsMod = new ModifyListener() 
-		{
-			public void modifyText(ModifyEvent e) 
-			{
+		ModifyListener lsMod = new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
 				input.setChanged();
 			}
 		};
@@ -211,44 +207,37 @@ public class CmisInputDialog extends BaseStepDialog implements StepDialogInterfa
 		input.setChanged(changed);
 	
 		shell.open();
-		while (!shell.isDisposed())
-		{
-		    if (!display.readAndDispatch()) display.sleep();
+		while (!shell.isDisposed()) {
+		    if (!display.readAndDispatch())
+		    	display.sleep();
 		}
 		return stepname;
 	}
 	
 	// Read data from input (TextFileInputInfo)
-	public void getData()
-	{
+	public void getData() {
 		wStepname.selectAll();
-		if (url != null)
-		{
+		if (url != null) {
 			wUrl.setText(url);
 		}
-		if (login != null)
-		{
+		if (login != null) {
 			wLogin.setText(login);
 		}
-		if (password != null)
-		{
+		if (password != null) {
 			wPassword.setText(password);
 		}
-		if (cmisQuery != null)
-		{
+		if (cmisQuery != null) {
 			wCmisQuery.setText(cmisQuery);
 		}
 	}
 
-	private void cancel()
-	{
+	private void cancel() {
 		stepname = null;
 		input.setChanged(changed);
 		dispose();
 	}
 
-	private void ok()
-	{
+	private void ok() {
 		stepname = wStepname.getText();
 		url = wUrl.getText();
 		login = wLogin.getText();

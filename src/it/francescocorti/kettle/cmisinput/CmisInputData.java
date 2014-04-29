@@ -10,12 +10,11 @@ import org.pentaho.di.trans.step.StepDataInterface;
  * @version 1.2
  * @see http://fcorti.com
  */
-public class CmisInputData extends BaseStepData implements StepDataInterface
-{
+public class CmisInputData extends BaseStepData implements StepDataInterface {
+
 	public RowMetaInterface outputRowMeta;
 
-    public CmisInputData()
-	{
+    public CmisInputData() {
 		super();
 	}
 }
