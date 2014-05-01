@@ -1,5 +1,6 @@
 package it.francescocorti.kettle.cmisinput;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -23,7 +24,7 @@ import org.pentaho.di.trans.step.StepMetaInterface;
 
 /**
  * @author Francesco Corti
- * @since 2014-04-10
+ * @since 2014-05-01
  * @version 1.2
  * @see http://fcorti.com
  */
@@ -74,13 +75,16 @@ public class CmisInput extends BaseStep implements StepInterface {
 
 			    	PropertyData<?> property = result.getProperties().get(j);
 
-			    	logRowlevel("Cmis Input - Property: '" + property.getQueryName() + "'='" + property.getFirstValue() + "'");
-	                if (property.getClass().isInstance(new PropertyDateTimeImpl()))
-	    	        	outputRow[j] = new Date(((GregorianCalendar) property.getFirstValue()).getTimeInMillis());
+			    	if (property.getValues().size() > 1)
+				    	logBasic("Cmis Input - Property: '" + property.getQueryName() + "' is a multivalue property. Only first value will be retrieved.");
+
+			    	logRowlevel("Cmis Input - Property: '" + property.getQueryName() + "'='" + property.getFirstValue() + "'.");
+                	if (property.getFirstValue() == null || property.getFirstValue().equals(""))
+                		outputRow[j] = null;
+                	else if (property.getClass().isInstance(new PropertyDateTimeImpl()))
+                		outputRow[j] = new Date(((GregorianCalendar) property.getFirstValue()).getTimeInMillis());
 	                else if (property.getClass().isInstance(new PropertyIntegerImpl()))
-	    	        	outputRow[j] = ((BigInteger)property.getFirstValue()).longValue();
-	                else if (property.getClass().isInstance(new PropertyDecimalImpl()))
-	    	        	outputRow[j] = ((BigInteger)property.getFirstValue()).doubleValue();
+                		outputRow[j] = ((BigInteger)property.getFirstValue()).longValue();
 	                else
 	                	outputRow[j] = property.getFirstValue();
 			    }
