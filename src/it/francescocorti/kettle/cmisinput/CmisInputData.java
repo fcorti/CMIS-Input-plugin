@@ -6,7 +6,7 @@ import org.pentaho.di.trans.step.StepDataInterface;
 
 /**
  * @author Francesco Corti
- * @since 2014-04-10
+ * @since 2014-11-09
  * @version 1.2
  * @see http://fcorti.com
  */

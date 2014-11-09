@@ -39,8 +39,8 @@ import org.w3c.dom.Node;
 
 /**
  * @author Francesco Corti
- * @since 2014-04-10
- * @version 1.2
+ * @since 2014-11-09
+ * @version 1.3
  * @see http://fcorti.com
  */
 public class CmisInputMeta extends BaseStepMeta implements StepMetaInterface {
@@ -61,7 +61,7 @@ public class CmisInputMeta extends BaseStepMeta implements StepMetaInterface {
     }
 
     public void setDefault() {
-        url = "http://localhost:8080/alfresco/service/api/cmis";
+        url = "http://localhost:8080/alfresco/api/-default-/cmis/versions/1.1/atom";
         login = "admin";
         password = "admin";
         cmisQuery = "select * from cmis:document";

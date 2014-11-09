@@ -22,8 +22,8 @@ import org.pentaho.di.trans.step.StepMetaInterface;
 
 /**
  * @author Francesco Corti
- * @since 2014-05-01
- * @version 1.2
+ * @since 2014-11-09
+ * @version 1.3
  * @see http://fcorti.com
  */
 public class CmisInput extends BaseStep implements StepInterface {

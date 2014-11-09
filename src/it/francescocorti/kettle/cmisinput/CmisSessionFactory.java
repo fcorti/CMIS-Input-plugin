@@ -13,8 +13,8 @@ import org.apache.chemistry.opencmis.commons.enums.BindingType;
 
 /**
  * @author Francesco Corti
- * @since 2014-04-10
- * @version 1.2
+ * @since 2014-11-09
+ * @version 1.3
  * @see http://fcorti.com
  */
 public class CmisSessionFactory {
